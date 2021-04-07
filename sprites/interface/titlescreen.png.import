@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/titlescreen.png-fb153fa04d39d34aba62a6528f90c022.image"
+
+[deps]
+
+source_file="res://sprites/interface/titlescreen.png"
+dest_files=[ "res://.import/titlescreen.png-fb153fa04d39d34aba62a6528f90c022.image" ]
+
+[params]
+

@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/ornament_right.png-9ba03a18d4ee88a0587c55e7329d808e.image"
+
+[deps]
+
+source_file="res://sprites/interface/ornament_right.png"
+dest_files=[ "res://.import/ornament_right.png-9ba03a18d4ee88a0587c55e7329d808e.image" ]
+
+[params]
+
