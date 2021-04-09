@@ -11,7 +11,27 @@ config_version=4
 [application]
 
 config/name="Kaetram-Godot"
+run/main_scene="res://scenes/Login.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Networking="*res://network/Networking.gd"
+Globals="*res://main/Globals.gd"
+
+[display]
+
+mouse_cursor/custom_image="res://sprites/cursor/hand.png"
+
+[network]
+
+limits/tcp/connect_timeout_seconds=20
+limits/debugger_stdout/max_chars_per_second=32768
+limits/webrtc/max_channel_in_buffer_kb=256
+limits/websocket_client/max_in_buffer_kb=8192
+limits/websocket_client/max_in_packets=8192
+limits/websocket_client/max_out_buffer_kb=8192
+limits/websocket_client/max_out_packets=8192
 
 [physics]
 
@@ -20,6 +40,15 @@ common/enable_pause_aware_picking=true
 [rendering]
 
 quality/driver/driver_name="GLES2"
+quality/intended_usage/framebuffer_allocation=0
+quality/intended_usage/framebuffer_allocation.mobile=1
+2d/snapping/use_gpu_pixel_snap=true
+threads/thread_model=2
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
+quality/shadows/filter_mode=0
+gles2/compatibility/disable_half_float=true
+environment/default_clear_color=Color( 0.0117647, 0.00784314, 0.00784314, 1 )
 environment/default_environment="res://default_env.tres"
+quality/dynamic_fonts/use_oversampling=false
+quality/2d/use_pixel_snap=true
