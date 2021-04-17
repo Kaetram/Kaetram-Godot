@@ -123,6 +123,9 @@ func save_info():
 	print('Saved config info.')
 	
 func load_info():
+	if is_registering():
+		return
+	
 	var config = ConfigFile.new()
 	var error = config.load_encrypted_pass(Globals.config_path, Globals.encrypt_password)
 	

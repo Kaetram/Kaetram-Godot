@@ -50,3 +50,6 @@ func send_login(email = '', isGuest = false):
 		
 	send(Packets.Intro, [Packets.IntroOpcode.Login, username, password])
 	
+func set_credentials(username_text, password_text):
+	username = username_text
+	password = password_text
