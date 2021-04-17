@@ -50,6 +50,9 @@ func send_login(email = '', isGuest = false):
 		
 	send(Packets.Intro, [Packets.IntroOpcode.Login, username, password])
 	
+func send_ready(map_loaded = false):
+	send(Packets.Ready, [true, map_loaded, Networking.GAME_CLIENT])
+	
 func set_credentials(username_text, password_text):
 	username = username_text
 	password = password_text

@@ -16,7 +16,6 @@ var development = false
 var reconnection_attempts = 0
 var reconnection_threshold = 30
 
-
 var _handler
 
 func _ready():
