@@ -1,7 +1,7 @@
 extends Node
 
 const GAME_CLIENT = 'Kaetram_Open_GoDot'
-const GAME_URL = 'ws://127.0.0.1:9002'
+const GAME_URL = 'ws://127.0.0.1:9003'
 
 const Packets = preload('Packets.gd')
 const Connection = preload('Connection.gd')

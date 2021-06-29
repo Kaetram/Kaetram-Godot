@@ -2,6 +2,8 @@ extends Node2D
 
 var Connection = Networking._connection
 
+onready var Map = get_node("Canvas/Map")
+
 const Packets = preload('res://network/Packets.gd')
 
 # Called when the node enters the scene tree for the first time.
@@ -28,6 +30,7 @@ func handle_packet(data, _utf8 = false):
 			
 		Packets.Region:
 			print('Received region packet!')
+			Map.handle_region(data)
 
 func _process(delta):
 	if Connection.has_packet_queue():

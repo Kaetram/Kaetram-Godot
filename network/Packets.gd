@@ -186,10 +186,10 @@ enum ShopOpcode {
 enum RegionOpcode {
 	Render = 0,
 	Modify = 1,
-	Tileset = 2,
+	Collision = 2,
 	Update = 3,
 	Reset = 4,
-	Doors = 5
+	Tileset = 5
 }
 
 enum OverlayOpcode {
