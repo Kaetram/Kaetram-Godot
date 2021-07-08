@@ -28,7 +28,7 @@ mouse_cursor/custom_image="res://sprites/cursor/hand.png"
 
 limits/tcp/connect_timeout_seconds=20
 limits/debugger_stdout/max_chars_per_second=32768
-limits/webrtc/max_channel_in_buffer_kb=256
+limits/webrtc/max_channel_in_buffer_kb=1024
 limits/websocket_client/max_in_buffer_kb=8192
 limits/websocket_client/max_in_packets=8192
 limits/websocket_client/max_out_buffer_kb=8192

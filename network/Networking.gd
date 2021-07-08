@@ -74,7 +74,7 @@ func _on_connected(protocol = ''):
 
 func _on_data():
 	var packet_string = _client.get_peer(1).get_packet().get_string_from_utf8()
-	
+
 	if packet_string[0] != '[':
 		_connection.handle_packet(packet_string, true)
 	else:

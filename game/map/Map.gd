@@ -1,6 +1,6 @@
 extends Node
 
-var tile_maps
+var tile_layers
 
 export var tile_set: TileSet
 
@@ -12,7 +12,7 @@ onready var TileLayer3 = get_node("TileLayer3")
 const Packets = preload('res://network/Packets.gd')
 
 func _ready():
-	tile_maps = [TileLayer0, TileLayer1, TileLayer2, TileLayer3]
+	tile_layers = [TileLayer0, TileLayer1, TileLayer2, TileLayer3]
 	
 	Builder.set_tile_set(tile_set)
 	Builder.build_tilesets()
@@ -39,20 +39,21 @@ func handle_region(data):
 			
 		Packets.RegionOpcode.Tileset:
 			print('Received tileset opcode.')
-		
 			for tile in info:
-				print(tile)
-				#handle_tileset(tile, info[tile])
+				handle_tileset(tile, info[tile])
 	
 func handle_tile(info):
 	if not info or not 'data' in info:
 		return
 		
-	print(info)
 	var tile_data = info.data
-	#var position = info.position
+	var position = info.position
 	
-	
+	if typeof(tile_data) == TYPE_ARRAY:
+		for i in range(0, len(tile_data)):
+			set_tile(tile_layers[i], position.x, position.y, tile_data[i])
+	else:
+		set_tile(tile_layers[0], position.x, position.y, tile_data)
 	
 func handle_tileset(tile_id, info):
 	tile_id = int(tile_id) - 1
@@ -79,13 +80,13 @@ func handle_tileset(tile_id, info):
 	if 'h' in info:
 		tile_set.autotile_set_z_index(tileset_id, Vector2(coord.x, coord.y), info.h)
 
-func set_tile(x, y, tile_id, animation = null):
+func set_tile(tile_layer, x, y, tile_id, animation = null):
 	tile_id = int(tile_id) - 1
 	
 	var tile_info = get_tile_coord(tile_id)
 	var tile_data = Vector2(tile_info.x, tile_info.y)
 	
-	tile_set.set_cell(int(x), int(y), tile_info.tileset_id, false, false, false, tile_data)
+	tile_layer.set_cell(int(x), int(y), tile_info.tileset_id, false, false, false, tile_data)
 	
 func get_tile_coord(tile_id):
 	var formatted_tile_id = tile_id

@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=7 format=2]
+[gd_resource type="TileSet" load_steps=8 format=2]
 
 [ext_resource path="res://sprites/tilesets/tilesheet-2.png" type="Texture" id=1]
 [ext_resource path="res://sprites/tilesets/tilesheet-1.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://sprites/tilesets/tilesheet-4.png" type="Texture" id=4]
 [ext_resource path="res://sprites/tilesets/tilesheet-5.png" type="Texture" id=5]
 [ext_resource path="res://sprites/tilesets/tilesheet-6.png" type="Texture" id=6]
+[ext_resource path="res://sprites/tilesets/tilesheet-mobset.png" type="Texture" id=7]
 
 [resource]
 0/name = "tilesheet-1.png 0"
@@ -123,16 +124,14 @@
 4/shape_one_way_margin = 0.0
 4/shapes = [  ]
 4/z_index = 0
-5/name = "tilesheet-6.png 5"
-5/texture = ExtResource( 6 )
+5/name = "tilesheet-mobset.png 5"
+5/texture = ExtResource( 7 )
 5/tex_offset = Vector2( 0, 0 )
 5/modulate = Color( 1, 1, 1, 1 )
-5/region = Rect2( 0, 0, 1024, 1024 )
-5/tile_mode = 1
-5/autotile/bitmask_mode = 0
-5/autotile/bitmask_flags = [  ]
+5/region = Rect2( 0, 0, 320, 192 )
+5/tile_mode = 2
 5/autotile/icon_coordinate = Vector2( 0, 0 )
-5/autotile/tile_size = Vector2( 16, 16 )
+5/autotile/tile_size = Vector2( 32, 32 )
 5/autotile/spacing = 0
 5/autotile/occluder_map = [  ]
 5/autotile/navpoly_map = [  ]
@@ -146,3 +145,24 @@
 5/shape_one_way_margin = 0.0
 5/shapes = [  ]
 5/z_index = 0
+6/name = "tilesheet-6.png 6"
+6/texture = ExtResource( 6 )
+6/tex_offset = Vector2( 0, 0 )
+6/modulate = Color( 1, 1, 1, 1 )
+6/region = Rect2( 0, 0, 1024, 1024 )
+6/tile_mode = 2
+6/autotile/icon_coordinate = Vector2( 0, 0 )
+6/autotile/tile_size = Vector2( 32, 32 )
+6/autotile/spacing = 0
+6/autotile/occluder_map = [  ]
+6/autotile/navpoly_map = [  ]
+6/autotile/priority_map = [  ]
+6/autotile/z_index_map = [  ]
+6/occluder_offset = Vector2( 0, 0 )
+6/navigation_offset = Vector2( 0, 0 )
+6/shape_offset = Vector2( 0, 0 )
+6/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+6/shape_one_way = false
+6/shape_one_way_margin = 0.0
+6/shapes = [  ]
+6/z_index = 0
