@@ -3,10 +3,9 @@ extends Node2D
 var Connection = Networking._connection
 
 onready var Map = get_node('Canvas/Map')
-
 onready var Player = get_node('Canvas/Player')
-
 onready var Loading = get_node('GUI/Loading')
+onready var Cursor = get_node('Canvas/Map/Cursor')
 
 const Packets = preload('res://network/Packets.gd')
 
@@ -37,8 +36,6 @@ func handle_packet(data, _utf8 = false):
 			
 			Player.set_position(Vector2(player_info.x * 16, player_info.y * 16))
 			
-			print(player_info)
-			
 			Connection.send_ready()
 			
 		Packets.Region:
@@ -46,8 +43,8 @@ func handle_packet(data, _utf8 = false):
 			Map.handle_region(data)
 			
 			Loading.visible = false
+			Cursor.visible = true
 			
-
 func _process(delta):
 	if Connection.has_packet_queue():
 		handle_packet(Connection.get_packet_from_queue())

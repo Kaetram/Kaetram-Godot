@@ -39,6 +39,7 @@ func handle_region(data):
 			
 		Packets.RegionOpcode.Tileset:
 			print('Received tileset opcode.')
+			
 			for tile in info:
 				handle_tileset(tile, info[tile])
 	
@@ -129,3 +130,11 @@ func shape_exists(tileset_id, x, y):
 	
 func get_rectangle_points(size = 32):
 	return [Vector2(0, 0), Vector2(size, 0), Vector2(size, size), Vector2(0, size)]
+	
+func get_cell(x, y):
+	for i in tile_layers:
+		var cell_info = i.get_cell_autotile_coord(x, y)
+		
+		return cell_info
+			
+	return null

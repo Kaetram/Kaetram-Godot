@@ -5,8 +5,8 @@
 [ext_resource path="res://data/Tileset.tres" type="TileSet" id=3]
 [ext_resource path="res://player/Player.gd" type="Script" id=4]
 [ext_resource path="res://game/Camera.gd" type="Script" id=5]
-[ext_resource path="res://sprites/effects/tile-green.png" type="Texture" id=6]
-[ext_resource path="res://game/map/Tile.gd" type="Script" id=7]
+[ext_resource path="res://sprites/effects/tile-select.png" type="Texture" id=6]
+[ext_resource path="res://game/map/Cursor.gd" type="Script" id=7]
 
 [sub_resource type="DynamicFontData" id=1]
 antialiased = false
@@ -61,7 +61,8 @@ __meta__ = {
 script = ExtResource( 2 )
 tile_set = ExtResource( 3 )
 
-[node name="Tile Select" type="Sprite" parent="Canvas/Map"]
+[node name="Cursor" type="Sprite" parent="Canvas/Map"]
+visible = false
 z_index = 1000
 texture = ExtResource( 6 )
 centered = false
@@ -69,7 +70,7 @@ hframes = 4
 frame = 3
 script = ExtResource( 7 )
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Canvas/Map/Tile Select"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Canvas/Map/Cursor"]
 autoplay = "spin"
 anims/spin = SubResource( 4 )
 
