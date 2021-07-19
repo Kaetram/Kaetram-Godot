@@ -1,4 +1,4 @@
-extends Node
+extends Navigation2D
 
 var tile_layers
 
@@ -67,7 +67,7 @@ func handle_tileset(tile_id, info):
 	# p - Polygon partial tile collision
 	# h - Tile with Z-Index Properties
 	###
-
+	
 	if 'c' in info:
 		if shape_exists(tileset_id, coord.x, coord.y):
 			return
@@ -80,6 +80,9 @@ func handle_tileset(tile_id, info):
 
 	if 'h' in info:
 		tile_set.autotile_set_z_index(tileset_id, Vector2(coord.x, coord.y), info.h)
+		
+	if not 'c' in info:
+		print(info)
 
 func set_tile(tile_layer, x, y, tile_id, animation = null):
 	tile_id = int(tile_id) - 1

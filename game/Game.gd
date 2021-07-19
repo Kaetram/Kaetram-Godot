@@ -33,8 +33,9 @@ func handle_packet(data, _utf8 = false):
 			print('Received welcome packet!')
 			
 			var player_info = data.pop_front()
-			
-			Player.set_position(Vector2(player_info.x * 16, player_info.y * 16))
+			var position = Vector2(player_info.x * Globals.tile_size, player_info.y * Globals.tile_size)
+		
+			Player.set_position(position)
 			
 			Connection.send_ready()
 			

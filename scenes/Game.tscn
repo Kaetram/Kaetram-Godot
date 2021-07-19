@@ -57,7 +57,7 @@ __meta__ = {
 
 [node name="Canvas" type="CanvasModulate" parent="."]
 
-[node name="Map" type="Node2D" parent="Canvas"]
+[node name="Map" type="Navigation2D" parent="Canvas"]
 script = ExtResource( 2 )
 tile_set = ExtResource( 3 )
 
@@ -108,3 +108,5 @@ limit_bottom = 8192
 smoothing_enabled = true
 smoothing_speed = 10.0
 script = ExtResource( 5 )
+
+[node name="Pathing" type="Line2D" parent="Canvas"]
