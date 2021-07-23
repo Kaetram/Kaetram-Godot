@@ -1,0 +1,4 @@
+enum {
+	MOVE,
+	ATTACK
+}
