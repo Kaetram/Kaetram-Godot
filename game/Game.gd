@@ -1,12 +1,14 @@
 extends Node2D
 
-var debug = true
+var debug = true # TODO - Grab status from handshake
+
 var Connection = Networking._connection
 
 onready var Map = get_node('Canvas/Map')
 onready var Player = get_node('Canvas/Player')
 onready var Loading = get_node('GUI/Loading')
 onready var Cursor = get_node('Canvas/Map/Cursor')
+onready var Debug = get_node('GUI/DebugMenu')
 
 const Packets = preload('res://network/Packets.gd')
 
@@ -16,6 +18,19 @@ func _ready():
 	Networking.reconnection_attempts = 0
 	
 	Loading.set_position(Vector2(OS.window_size.x / 2, OS.window_size.y / 2))
+	
+var debug_toggled = false
+
+func _unhandled_key_input(event):
+	if debug_toggled:
+		if event.scancode == KEY_9:
+			Debug.visible = not Debug.visible
+	
+	if Input.is_action_just_released('ui_debug'):
+		debug_toggled = true
+		return
+		
+	debug_toggled = false
 
 func handle_packet(data, _utf8 = false):
 	if typeof(data) == TYPE_STRING:
