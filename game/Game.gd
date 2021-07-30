@@ -8,7 +8,7 @@ onready var Map = get_node('Canvas/Map')
 onready var Player = get_node('Canvas/Player')
 onready var Loading = get_node('GUI/Loading')
 onready var Cursor = get_node('Canvas/Map/Cursor')
-onready var Debug = get_node('GUI/DebugMenu')
+onready var Debug = get_node('Debugging/DebugMenu')
 
 const Packets = preload('res://network/Packets.gd')
 
@@ -22,6 +22,12 @@ func _ready():
 var debug_toggled = false
 
 func _unhandled_key_input(event):
+	
+	var x = Input.get_action_strength('ui_right') - Input.get_action_strength('ui_left')
+	var y = Input.get_action_strength('ui_down') - Input.get_action_strength('ui_up')
+	
+	Player.handle_key_input(x, y)
+	
 	if debug_toggled:
 		if event.scancode == KEY_9:
 			Debug.visible = not Debug.visible
@@ -66,3 +72,23 @@ func handle_packet(data, _utf8 = false):
 func _process(delta):
 	if Connection.has_packet_queue():
 		handle_packet(Connection.get_packet_from_queue())
+
+# ------------- Debug Buttons -------------
+
+var step = 0
+func _on_debug_vector_button():
+	print(step % 4)
+	
+	if step % 4 == 0: # up
+		Player.set_animations(Vector2(0, -1))
+	elif step % 4 == 1: # right
+		Player.set_animations(Vector2(1, 0))
+	elif step % 4 == 2: # down
+		Player.set_animations(Vector2(0, 1))
+	elif step % 4 == 3: # left
+		Player.set_animations(Vector2(-1, 0))
+	
+	step += 1
+
+func _on_debug_move_button():
+	Player.move_down()

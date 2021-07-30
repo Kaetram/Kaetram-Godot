@@ -596,6 +596,7 @@ tracks/3/keys = {
 [sub_resource type="Animation" id=14]
 resource_name = "WalkUp"
 length = 0.8
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("PlayerSprite:frame")
 tracks/0/interp = 1
@@ -824,14 +825,14 @@ texture = ExtResource( 1 )
 offset = Vector2( 0, -10 )
 hframes = 5
 vframes = 9
-frame = 40
+frame = 15
 
 [node name="Weapon" type="Sprite" parent="PlayerSprite"]
 texture = ExtResource( 4 )
 offset = Vector2( 0, -10 )
 hframes = 5
 vframes = 9
-frame = 40
+frame = 15
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -2 )

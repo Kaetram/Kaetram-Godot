@@ -21,7 +21,7 @@ var running = false
 var idle_animation = 'Idle'
 var wait_for_animation = false
 
-const position_offset = 1.5
+const position_offset = 1
 
 onready var sprite = $PlayerSprite
 onready var weapon = $PlayerSprite/Weapon
@@ -61,6 +61,38 @@ func handle_camera(data):
 			
 			camera.set_camera_limits(limits.left, limits.top, limits.right, limits.bottom)
 
+func handle_key_input(x, y):
+	# right x: 1, y: 0
+	# left: x: -1, y: 0
+	# up: x: 0, y: -1
+	# down: x: 0, y: 1
+	
+	if len(movement_queue) > 0:
+		return
+		
+	if x == 1 and y == 0:
+		move_right()
+	elif x == -1 and y == 0:
+		move_left()
+	elif x == 0 and y == -1:
+		move_up()
+	elif x == 0 and y == 1:
+		move_down()
+	
+	print('x: ' + str(x) + ' y: ' + str(y))
+
+func move_up():
+	movement_queue.append(Vector2(position.x, position.y - 16))
+	
+func move_down():
+	movement_queue.append(Vector2(position.x, position.y + 16))
+	
+func move_left():
+	movement_queue.append(Vector2(position.x - 16, position.y))
+	
+func move_right():
+	movement_queue.append(Vector2(position.x + 16, position.y))
+
 func handle_queue():
 	
 	if position.distance_to(last_target) < position_offset and last_target != Vector2.ZERO:
@@ -68,29 +100,12 @@ func handle_queue():
 		last_target = Vector2.ZERO
 	
 	if len(movement_queue) > 0:
-		var element = movement_queue[0]
+		var movement = movement_queue.pop_front()
 		
-		match element.type:
-			'move':
-				var distance = position.distance_to(element.position)
+		input_vector = position.direction_to(movement)
 		
-				if distance < position_offset:
-					movement_queue.remove(0)
-				
-				input_vector = position.direction_to(element.position)
-				
-				last_target = element.position
-				
-			'animation':
-				if wait_for_animation:
-					movement_queue.remove(0)
-					input_vector = Vector2.ZERO
-					wait_for_animation = false
-					return
-					
-				set_attack_state(element.animation)
-				
-				wait_for_animation = true
+		last_target = movement
+	
 				
 func set_input_vector(x, y):
 	input_vector.x = x
