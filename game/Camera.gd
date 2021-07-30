@@ -7,9 +7,11 @@ const LIMIT_BOTTOM = 8192
 
 const MAX_ZOOM = Vector2(0.45, 0.45)
 const MIN_ZOOM = Vector2(0.2, 0.2)
+const DEFAULT_ZOOM = Vector2(0.38, 0.38)
 
 func _ready():  
 	set_process_input(true)
+	update_zoom(DEFAULT_ZOOM)
 
 func _unhandled_input(event):
 	if event is InputEventKey:

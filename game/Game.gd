@@ -1,5 +1,6 @@
 extends Node2D
 
+var debug = true
 var Connection = Networking._connection
 
 onready var Map = get_node('Canvas/Map')
@@ -33,9 +34,10 @@ func handle_packet(data, _utf8 = false):
 			print('Received welcome packet!')
 			
 			var player_info = data.pop_front()
-			var position = Vector2(player_info.x * Globals.tile_size, player_info.y * Globals.tile_size)
+			var x = player_info.x * Globals.tile_size - (Globals.tile_size / 2)
+			var y = player_info.y * Globals.tile_size - (Globals.tile_size / 2)
 		
-			Player.set_position(position)
+			Player.set_position(Vector2(x, y))
 			
 			Connection.send_ready()
 			

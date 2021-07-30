@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://game/Game.gd" type="Script" id=1]
 [ext_resource path="res://game/map/Map.gd" type="Script" id=2]
 [ext_resource path="res://data/Tileset.tres" type="TileSet" id=3]
 [ext_resource path="res://player/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://game/Camera.gd" type="Script" id=5]
 [ext_resource path="res://sprites/effects/tile-select.png" type="Texture" id=6]
 [ext_resource path="res://game/map/Cursor.gd" type="Script" id=7]
 
@@ -96,3 +97,14 @@ format = 1
 [node name="Pathing" type="Line2D" parent="Canvas"]
 
 [node name="Player" parent="Canvas" instance=ExtResource( 4 )]
+
+[node name="Camera" type="Camera2D" parent="Canvas/Player"]
+current = true
+zoom = Vector2( 0.37, 0.37 )
+limit_left = 0
+limit_top = 0
+limit_right = 11200
+limit_bottom = 8000
+limit_smoothed = true
+smoothing_enabled = true
+script = ExtResource( 5 )
