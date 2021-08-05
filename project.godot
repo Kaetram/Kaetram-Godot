@@ -19,6 +19,7 @@ config/icon="res://icon.png"
 Builder="*res://game/map/Builder.gd"
 Networking="*res://network/Networking.gd"
 Globals="*res://Globals.gd"
+Astar="*res://utils/Astar.gd"
 
 [display]
 

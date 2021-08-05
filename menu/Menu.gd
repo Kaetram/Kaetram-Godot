@@ -40,6 +40,7 @@ func handle_handshake(info):
 	
 	if 'development' in info:
 		Networking.set_development(info.development)
+		Globals.debug = info.development
 	
 	Connection.send_login(email_field.text if is_registering() else '')
 	
@@ -130,7 +131,7 @@ func load_info():
 	var error = config.load_encrypted_pass(Globals.config_path, Globals.encrypt_password)
 	
 	if error != 0:
-		if error != 7: # If it's something different than "file not found"
+		if error != 7: # If it's something different than 'file not found'
 			print('An error has occurred while trying to load config file.')
 		return
 	

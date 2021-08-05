@@ -1,13 +1,13 @@
-extends Navigation2D
+extends Node2D
 
 var tile_layers
 
 export var tile_set: TileSet
 
-onready var TileLayer0 = get_node("TileLayer0")
-onready var TileLayer1 = get_node("TileLayer1")
-onready var TileLayer2 = get_node("TileLayer2")
-onready var TileLayer3 = get_node("TileLayer3")
+onready var TileLayer0 = get_node('TileLayer0')
+onready var TileLayer1 = get_node('TileLayer1')
+onready var TileLayer2 = get_node('TileLayer2')
+onready var TileLayer3 = get_node('TileLayer3')
 
 const Packets = preload('res://network/Packets.gd')
 
@@ -49,12 +49,13 @@ func handle_tile(info):
 		
 	var tile_data = info.data
 	var position = info.position
+	var colliding = 'c' in info
 	
 	if typeof(tile_data) == TYPE_ARRAY:
 		for i in range(0, len(tile_data)):
-			set_tile(tile_layers[i], position.x, position.y, tile_data[i])
+			set_tile(tile_layers[i], position.x, position.y, tile_data[i], colliding)
 	else:
-		set_tile(tile_layers[0], position.x, position.y, tile_data)
+		set_tile(tile_layers[0], position.x, position.y, tile_data, colliding)
 	
 func handle_tileset(tile_id, info):
 	tile_id = int(tile_id) - 1
@@ -63,32 +64,21 @@ func handle_tileset(tile_id, info):
 	var tileset_id = coord.tileset_id
 
 	###
-	# c - Full tile collision
 	# p - Polygon partial tile collision
 	# h - Tile with Z-Index Properties
 	###
-	
-	if 'c' in info:
-		if shape_exists(tileset_id, coord.x, coord.y):
-			return
-		
-		var collision_shape = ConvexPolygonShape2D.new()
-
-		collision_shape.set_point_cloud(get_rectangle_points())
-		
-		tile_set.tile_add_shape(tileset_id, collision_shape, Transform2D(), false, Vector2(coord.x, coord.y))
 
 	if 'h' in info:
 		tile_set.autotile_set_z_index(tileset_id, Vector2(coord.x, coord.y), info.h)
-		
-	if not 'c' in info:
-		print(info)
 
-func set_tile(tile_layer, x, y, tile_id, animation = null):
+func set_tile(tile_layer, x, y, tile_id, colliding, animation = null):
 	tile_id = int(tile_id) - 1
 	
 	var tile_info = get_tile_coord(tile_id)
 	var tile_data = Vector2(tile_info.x, tile_info.y)
+	
+	if colliding:
+		Astar.Grid[y][x] = 1
 	
 	tile_layer.set_cell(int(x), int(y), tile_info.tileset_id, false, false, false, tile_data)
 	
@@ -131,7 +121,7 @@ func shape_exists(tileset_id, x, y):
 	
 	return false
 	
-func get_rectangle_points(size = 32):
+func get_rectangle_points(size = 16):
 	return [Vector2(0, 0), Vector2(size, 0), Vector2(size, size), Vector2(0, size)]
 	
 func get_cell(x, y):

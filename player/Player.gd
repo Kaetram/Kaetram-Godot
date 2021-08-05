@@ -1,17 +1,16 @@
-extends KinematicBody2D
+extends Position2D
 
 const Packets = preload('res://network/Packets.gd')
 const States = preload('res://player/States.gd')
 
 var Connection = Networking._connection
 
-export var acceleration = 500
-export var speed = 80
-export var friction = 750
+export var speed = 75
+
+var velocity = Vector2()
 
 var id
-var state = States.MOVE
-var velocity = Vector2.ZERO
+var state = States.IDLE
 var roll_vector = Vector2.DOWN
 var input_vector = Vector2.ZERO
 var send_updates = false
@@ -21,7 +20,15 @@ var running = false
 var idle_animation = 'Idle'
 var wait_for_animation = false
 
-const position_offset = 1
+var move_up = false
+var move_right = false
+var move_down = false
+var move_left = false
+
+var path = []
+var target_point = Vector2.ZERO
+# Distance in pixels before target is considered to have arrived at a point
+var point_offset = 1
 
 onready var sprite = $PlayerSprite
 onready var weapon = $PlayerSprite/Weapon
@@ -39,15 +46,50 @@ func _ready():
 
 	animation_tree.active = true
 
-func _physics_process(delta):
-	handle_queue()
+func _process(delta):
+	if not state == States.MOVE:
+		return
 	
-	match state:
-		States.ATTACK:
-			attack_state()
+	var arrived = move_to(target_point)
+	
+	if arrived:
+		path.remove(0)
+		
+		if len(path) < 1:
+			change_state(States.IDLE)
+			return
 			
-		States.MOVE:
-			move_state(delta)
+		target_point = path[0]	
+
+func change_state(new_state):
+	state = new_state
+	
+	if new_state == States.IDLE:
+		animation_state.travel('Idle')
+	
+	if new_state != States.MOVE:
+		return
+		
+	animation_state.travel('Walk')
+		
+	if not path or len(path) < 2:
+		change_state(States.IDLE)
+		return
+		
+	target_point = path[1]
+	
+func move_to(pos):
+	var mass = 1
+	
+	var max_speed = (pos - self.position).normalized() * speed
+	var steering = max_speed - velocity
+	
+	velocity += steering / mass
+	position += velocity * get_process_delta_time()
+	
+	set_animations(position.direction_to(pos))
+	
+	return position.distance_to(pos) < point_offset
 
 func handle_camera(data):
 	var opcode = int(data.pop_front())
@@ -60,53 +102,35 @@ func handle_camera(data):
 			var limits = data.pop_front()
 			
 			camera.set_camera_limits(limits.left, limits.top, limits.right, limits.bottom)
-
-func handle_key_input(x, y):
-	# right x: 1, y: 0
-	# left: x: -1, y: 0
-	# up: x: 0, y: -1
-	# down: x: 0, y: 1
 	
-	if len(movement_queue) > 0:
+func attack_state():
+	velocity = Vector2.ZERO
+	animation_state.travel('Attack')
+
+func add_movement_queue(movement):
+	movement_queue.append(movement)
+
+func attack_animation_finished():
+	state = States.MOVE
+
+func has_weapon():
+	return weapon.texture != null
+
+func get_start_position():
+	return Vector2(int(floor(position.x / 16)), int(floor(position.y / 16)))
+
+# i_v = input_vector
+func set_animations(i_v):
+	animation_tree.set('parameters/Idle/blend_position', i_v)
+	animation_tree.set('parameters/Walk/blend_position', i_v)
+	animation_tree.set('parameters/Attack/blend_position', i_v)
+	
+func set_weapon(weapon_info):
+	if weapon_info.string == 'null':
 		return
-		
-	if x == 1 and y == 0:
-		move_right()
-	elif x == -1 and y == 0:
-		move_left()
-	elif x == 0 and y == -1:
-		move_up()
-	elif x == 0 and y == 1:
-		move_down()
-	
-	print('x: ' + str(x) + ' y: ' + str(y))
 
-func move_up():
-	movement_queue.append(Vector2(position.x, position.y - 16))
-	
-func move_down():
-	movement_queue.append(Vector2(position.x, position.y + 16))
-	
-func move_left():
-	movement_queue.append(Vector2(position.x - 16, position.y))
-	
-func move_right():
-	movement_queue.append(Vector2(position.x + 16, position.y))
+	weapon.texture = load('res://sprites/weapons/' + weapon_info.string + '.png')
 
-func handle_queue():
-	
-	if position.distance_to(last_target) < position_offset and last_target != Vector2.ZERO:
-		input_vector = Vector2.ZERO
-		last_target = Vector2.ZERO
-	
-	if len(movement_queue) > 0:
-		var movement = movement_queue.pop_front()
-		
-		input_vector = position.direction_to(movement)
-		
-		last_target = movement
-	
-				
 func set_input_vector(x, y):
 	input_vector.x = x
 	input_vector.y = y
@@ -123,49 +147,9 @@ func set_attack_state(attack_state):
 		
 	if send_updates:
 		Connection.send_attack(id, state)
+		
+func set_path(path):
+	self.path = path
 	
-func attack_state():
-	velocity = Vector2.ZERO
-	animation_state.travel('Attack')
-
-func add_movement_queue(movement):
-	movement_queue.append(movement)
-
-func move_state(delta):
-	if input_vector != Vector2.ZERO:
-		roll_vector = input_vector
-		
-		set_animations(input_vector)
-		
-		# TODO - Dynamic speed
-		#speed = 80
-		animation_state.travel('Walk')
-		
-		velocity = velocity.move_toward(input_vector * speed, acceleration * delta)
-	else:
-		animation_state.travel(idle_animation)
-		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
-
-	move()
-
-# i_v = input_vector
-func set_animations(i_v):
-	animation_tree.set('parameters/Idle/blend_position', i_v)
-	animation_tree.set('parameters/Walk/blend_position', i_v)
-	animation_tree.set('parameters/Attack/blend_position', i_v)
-	
-func set_weapon(weapon_info):
-	if weapon_info.string == 'null':
-		return
-
-	weapon.texture = load('res://sprites/weapons/' + weapon_info.string + '.png')
-
-func move():
-	velocity = move_and_slide(velocity, Vector2.ZERO, false, 4, PI/4, false)
-
-func attack_animation_finished():
-	state = States.MOVE
-
-func has_weapon():
-	return weapon.texture != null
+	change_state(States.MOVE)
 

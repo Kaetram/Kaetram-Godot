@@ -1,7 +1,5 @@
 extends Node2D
 
-var debug = true # TODO - Grab status from handshake
-
 var Connection = Networking._connection
 
 onready var Map = get_node('Canvas/Map')
@@ -21,8 +19,26 @@ func _ready():
 	
 var debug_toggled = false
 
-func _unhandled_key_input(event):
+func get_mouse_grid_position(mouse_position):
+	return Vector2(int(floor(mouse_position.x / 16)), int(floor(mouse_position.y / 16)))
+
+func _unhandled_input(event):
+	if not event is InputEventMouseButton:
+		return
 	
+	if event.button_index != BUTTON_LEFT or not event.pressed:
+		return
+		
+	var start_position = Player.get_start_position()
+	var end_position = get_mouse_grid_position(get_global_mouse_position())
+	var path = Astar.find_path(start_position, end_position)
+	
+	if len(path) < 2:
+		return
+	
+	Player.set_path(path)
+		
+func _unhandled_key_input(event):
 	var x = Input.get_action_strength('ui_right') - Input.get_action_strength('ui_left')
 	var y = Input.get_action_strength('ui_down') - Input.get_action_strength('ui_up')
 	
@@ -77,8 +93,6 @@ func _process(delta):
 
 var step = 0
 func _on_debug_vector_button():
-	print(step % 4)
-	
 	if step % 4 == 0: # up
 		Player.set_animations(Vector2(0, -1))
 	elif step % 4 == 1: # right

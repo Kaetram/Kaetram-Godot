@@ -4,7 +4,7 @@ var tilesheet_map = {}
 var tilesheet_dimensions = {}
 var tilesheet_gaps = {}
 
-var tile_set
+var tile_set: TileSet
 var ready = false
 var found_null = false
 
@@ -16,7 +16,7 @@ func _ready():
 func set_tile_set(new_tile_set):
 	self.tile_set = new_tile_set
 	self.texture_count = get_texture_count()
-
+	
 func build_tilesets():
 	if not tile_set:
 		return

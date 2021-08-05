@@ -1,4 +1,5 @@
 enum {
+	IDLE,
 	MOVE,
 	ATTACK
 }

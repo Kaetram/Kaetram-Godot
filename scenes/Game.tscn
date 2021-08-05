@@ -33,18 +33,6 @@ corner_radius_bottom_left = 2
 shadow_size = 8
 anti_aliasing = false
 
-[sub_resource type="DynamicFontData" id=10]
-antialiased = false
-font_path = "res://fonts/advocut/advocut-webfont.ttf"
-
-[sub_resource type="DynamicFontData" id=11]
-antialiased = false
-font_path = "res://fonts/graphicpixel.ttf"
-
-[sub_resource type="DynamicFont" id=12]
-font_data = SubResource( 11 )
-fallback/0 = SubResource( 10 )
-
 [sub_resource type="DynamicFontData" id=6]
 antialiased = false
 font_path = "res://fonts/advocut/advocut-webfont.ttf"
@@ -57,7 +45,19 @@ font_path = "res://fonts/graphicpixel.ttf"
 font_data = SubResource( 7 )
 fallback/0 = SubResource( 6 )
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="DynamicFontData" id=9]
+antialiased = false
+font_path = "res://fonts/advocut/advocut-webfont.ttf"
+
+[sub_resource type="DynamicFontData" id=10]
+antialiased = false
+font_path = "res://fonts/graphicpixel.ttf"
+
+[sub_resource type="DynamicFont" id=11]
+font_data = SubResource( 10 )
+fallback/0 = SubResource( 9 )
+
+[sub_resource type="Animation" id=12]
 length = 0.7
 loop = true
 tracks/0/type = "value"
@@ -105,7 +105,7 @@ __meta__ = {
 margin_right = 300.0
 margin_bottom = 17.0
 size_flags_vertical = 0
-custom_fonts/font = SubResource( 12 )
+custom_fonts/font = SubResource( 8 )
 text = "Debug Menu"
 align = 1
 
@@ -137,7 +137,7 @@ margin_left = -0.634033
 margin_top = 0.374577
 margin_right = 38.366
 margin_bottom = 9.37458
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 11 )
 text = "Loading..."
 align = 1
 valign = 1
@@ -147,7 +147,7 @@ __meta__ = {
 
 [node name="Canvas" type="CanvasModulate" parent="."]
 
-[node name="Map" type="Navigation2D" parent="Canvas"]
+[node name="Map" type="Node2D" parent="Canvas"]
 script = ExtResource( 2 )
 tile_set = ExtResource( 3 )
 
@@ -162,7 +162,7 @@ script = ExtResource( 7 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Canvas/Map/Cursor"]
 autoplay = "spin"
-anims/spin = SubResource( 9 )
+anims/spin = SubResource( 12 )
 
 [node name="TileLayer0" type="TileMap" parent="Canvas/Map"]
 tile_set = ExtResource( 3 )
@@ -183,8 +183,6 @@ format = 1
 tile_set = ExtResource( 3 )
 cell_size = Vector2( 16, 16 )
 format = 1
-
-[node name="Pathing" type="Line2D" parent="Canvas"]
 
 [node name="Player" parent="Canvas" instance=ExtResource( 4 )]
 
