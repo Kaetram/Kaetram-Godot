@@ -805,7 +805,7 @@ tracks/0/keys = {
 "values": [ false ]
 }
 
-[node name="Player" type="Position2D"]
+[node name="Player" type="KinematicBody2D"]
 scale = Vector2( 0.333, 0.333 )
 script = ExtResource( 2 )
 
@@ -855,3 +855,5 @@ parameters/Walk/blend_position = Vector2( 0, 1 )
 [node name="BlinkAnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Start = SubResource( 44 )
 anims/Stop = SubResource( 45 )
+
+[node name="Tween" type="Tween" parent="."]

@@ -1,13 +1,20 @@
-extends Position2D
+extends KinematicBody2D
 
 const Packets = preload('res://network/Packets.gd')
 const States = preload('res://player/States.gd')
 
+var direction: Vector2 = Vector2.ZERO
+
+var pixels_per_second: float = 4 * 16 # TODO - Not make this hardcoded
+var step_size: float = 1 / pixels_per_second
+
+var step: float = 0
+
+var pixels_moved: int = 0
+
 var Connection = Networking._connection
 
-export var speed = 75
-
-var velocity = Vector2()
+var velocity = Vector2.ZERO
 
 var id
 var state = States.IDLE
@@ -27,8 +34,10 @@ var move_left = false
 
 var path = []
 var target_point = Vector2.ZERO
+var new_target_point = Vector2.ZERO
+
 # Distance in pixels before target is considered to have arrived at a point
-var point_offset = 1
+var point_offset = 3
 
 onready var sprite = $PlayerSprite
 onready var weapon = $PlayerSprite/Weapon
@@ -46,20 +55,41 @@ func _ready():
 
 	animation_tree.active = true
 
-func _process(delta):
-	if not state == States.MOVE:
+func _physics_process(delta):
+	if target_point == Vector2.ZERO:
 		return
 	
-	var arrived = move_to(target_point)
+	direction = position.direction_to(target_point)
 	
-	if arrived:
+	if not is_moving(): 
+		return
+	
+	step += delta
+	
+	if step < step_size:
+		return
+		
+	step -= step_size
+	pixels_moved += 1
+	
+	move_and_collide(direction)
+	
+	if pixels_moved >= 16:
+		direction = Vector2.ZERO
+		pixels_moved = 0
+		step = 0
+		
 		path.remove(0)
 		
-		if len(path) < 1:
-			change_state(States.IDLE)
-			return
+		if len(path) > 0:
+			target_point = path[0]
 			
-		target_point = path[0]	
+			set_animations(position.direction_to(target_point))
+		else:
+			change_state(States.IDLE)
+	
+func is_moving() -> bool:
+	return direction.x != 0 or direction.y != 0
 
 func change_state(new_state):
 	state = new_state
@@ -75,21 +105,31 @@ func change_state(new_state):
 	if not path or len(path) < 2:
 		change_state(States.IDLE)
 		return
-		
-	target_point = path[1]
 	
-func move_to(pos):
-	var mass = 1
+	path.remove(0)
+	target_point = path[0]
 	
-	var max_speed = (pos - self.position).normalized() * speed
-	var steering = max_speed - velocity
+	set_animations(position.direction_to(target_point))
+
+func handle_key_input(x, y):
+	if x == y or (x != 0 and y != 0):
+		return
 	
-	velocity += steering / mass
-	position += velocity * get_process_delta_time()
+	var start_position = get_start_position()
+	var end_position = start_position + Vector2(x, y)
 	
-	set_animations(position.direction_to(pos))
+	var path = Astar.find_path(start_position, end_position)
 	
-	return position.distance_to(pos) < point_offset
+	set_path(path)
+	
+	if x > 0 and y == 0: # Right
+		print('Right?')
+	elif x < 0 and y == 0: # Down
+		print('Left?')
+	elif x == 0 and y > 0: # Down
+		print('Up')
+	elif x == 0 and y < 0: # Up
+		print('Down')
 
 func handle_camera(data):
 	var opcode = int(data.pop_front())
